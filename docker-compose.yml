@@ -1,14 +1,50 @@
 services:
   stats-server:
+    build:
+      context: ./stats/stats-service  # путь к конкретному сервисному модулю
+      dockerfile: Dockerfile
+    container_name: stats-server
     ports:
       - "9090:9090"
+    depends_on:
+      - stats-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/statDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
 
   stats-db:
     image: postgres:16.1
+    container_name: stats-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=statDB
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
 
   ewm-service:
+    build:
+      context: ./main-service
+      dockerfile: Dockerfile
+    container_name: ewm-main-service
     ports:
       - "8080:8080"
+    depends_on:
+      - ewm-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewmMainDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
 
   ewm-db:
     image: postgres:16.1
+    container_name: ewm-main-db
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=ewmMainDB
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
