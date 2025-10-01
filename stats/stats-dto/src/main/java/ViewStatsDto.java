@@ -1,15 +1,14 @@
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class ViewStatsDto {
+public record ViewStatsDto(
+        @NotBlank(message = "Название приложения не может быть пустым")
+        String app,
 
-    private String app;
+        @NotBlank(message = "URI не может быть пустым")
+        String uri,
 
-    private String uri;
-
-    private Long hits;
+        @NotNull(message = "Количество hits не может быть null")
+        Long hits
+) {
 }

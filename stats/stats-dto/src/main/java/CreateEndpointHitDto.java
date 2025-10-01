@@ -1,29 +1,23 @@
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class CreateEndpointHitDto {
+public record CreateEndpointHitDto(
+        Long id,
 
-    private Long id;
+        @NotBlank(message = "Название приложения не может быть пустым")
+        String app,
 
-    @NotBlank
-    private String app;
+        @NotBlank(message = "URI не может быть пустым")
+        String uri,
 
-    @NotBlank
-    private String uri;
+        @NotBlank(message = "IP адрес не может быть пустым")
+        String ip,
 
-    @NotBlank
-    private String ip;
-
-    @NotNull
-    @CreationTimestamp
-    private LocalDateTime timestamp;
+        @NotNull(message = "Временная метка не может быть null")
+        @CreationTimestamp
+        LocalDateTime timestamp
+) {
 }
