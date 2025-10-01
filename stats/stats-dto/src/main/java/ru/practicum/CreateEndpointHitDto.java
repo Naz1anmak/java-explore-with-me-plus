@@ -7,8 +7,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 public record CreateEndpointHitDto(
-        Long id,
-
         @NotBlank(message = "Название приложения не может быть пустым")
         String app,
 
