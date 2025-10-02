@@ -1,12 +1,14 @@
 package ru.practicum.service;
 
 import jakarta.validation.Valid;
-import ru.practicum.CreateEndpointHitDto;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
 
-public interface StatsService {
-    EndpointHitDto createHit(@Valid CreateEndpointHitDto createEndpointHitDto);
+import java.time.LocalDateTime;
+import java.util.List;
 
-    ViewStatsDto getStats();
+public interface StatsService {
+    EndpointHitDto createHit(@Valid EndpointHitDto endpointHitDto);
+
+    List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique);
 }

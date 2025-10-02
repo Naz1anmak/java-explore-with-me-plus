@@ -1,46 +1,55 @@
 services:
+  stats-db:
+    image: postgres:16.1
+    container_name: stats_db
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=statDB
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=12345
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+
+  main-db:
+    image: postgres:16.1
+    container_name: main_db
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_DB=mainDB
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=12345
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+
   stats-server:
-    build: ./stats/stats-service
-    container_name: stats-server
+    build: ./stats/stats-server
+    container_name: stats_server
     ports:
       - "9090:9090"
     depends_on:
       - stats-db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/statDB
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_DATASOURCE_USERNAME=dbuser
+      - SPRING_DATASOURCE_PASSWORD=12345
 
-  stats-db:
-    image: postgres:16.1
-    container_name: stats-db
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_DB=statDB
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-
-  ewm-service:
+  main-service:
     build: ./main-service
-    container_name: ewm-main-service
+    container_name: main_service
     ports:
       - "8080:8080"
     depends_on:
-      - ewm-db
+      - stats-server
+      - main-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewmMainDB
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
-
-  ewm-db:
-    image: postgres:16.1
-    container_name: ewm-main-db
-    ports:
-      - "6541:5432"
-    environment:
-      - POSTGRES_DB=ewmMainDB
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://main-db:5432/mainDB
+      - SPRING_DATASOURCE_USERNAME=dbuser
+      - SPRING_DATASOURCE_PASSWORD=12345
