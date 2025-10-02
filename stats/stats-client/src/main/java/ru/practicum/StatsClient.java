@@ -22,9 +22,6 @@ public class StatsClient {
                 .build();
     }
 
-    /**
-    Сохранить информацию об обращении к эндпоинту
-     */
     public void saveHit(CreateEndpointHitDto createEndpointHitDto) {
         restClient.post()
                 .uri("/hit")
@@ -36,9 +33,6 @@ public class StatsClient {
                 createEndpointHitDto.app(), createEndpointHitDto.uri());
     }
 
-    /**
-     * Получить статистику по посещениям
-     */
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end,
                                        List<String> uris, Boolean unique) {
         String startStr = start.format(formatter);
@@ -61,7 +55,7 @@ public class StatsClient {
                 .body(ViewStatsDto[].class);
 
         List<ViewStatsDto> result = stats != null ? List.of(stats) : List.of();
-        log.debug("Получено {} записей статистики", result.size());
+        log.debug("Получено записей статистики  {}", result.size());
         return result;
     }
 }
