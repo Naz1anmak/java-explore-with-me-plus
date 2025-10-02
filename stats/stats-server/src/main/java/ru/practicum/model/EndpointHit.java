@@ -6,21 +6,38 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "endpointhit")
+@Table(name = "endpoint_hits")
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter(AccessLevel.PROTECTED)
+@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EndpointHit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hit_id")
     private Long id;
-    @Column(name = "app", nullable = false)
+
     private String app;
-    @Column(name = "uri", nullable = false)
     private String uri;
-    @Column(name = "ip", nullable = false)
     private String ip;
-    @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
+
+    public EndpointHit(String app, String uri, String ip, LocalDateTime timestamp) {
+        this.app = app;
+        this.uri = uri;
+        this.ip = ip;
+        this.timestamp = timestamp;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EndpointHit)) return false;
+        return id != null && id.equals(((EndpointHit) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id == null ? 0 : id.hashCode();
+    }
 }

@@ -6,7 +6,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 @SpringBootApplication
@@ -17,12 +16,13 @@ public class MainApplication {
 
         StatsClient statsClient = context.getBean(StatsClient.class);
 
-        statsClient.hit(new EndpointHitDto("ewm-main-service", "/events/2", "192.163.0.1", LocalDateTime.now()));
+        statsClient.saveHit(new CreateEndpointHitDto(
+                "ewm-main-service", "/events/2", "192.163.0.1", LocalDateTime.now()));
 
-        List<String> uris = Arrays.asList("/events/2");
-        List<ViewStatsDto> viewStatsDto = statsClient.getStats(LocalDateTime.now().minusYears(10), LocalDateTime.now(), uris, false);
+        List<String> uris = List.of("/events/2");
+        List<ViewStatsDto> viewStatsDto = statsClient.getStats(
+                LocalDateTime.now().minusYears(10), LocalDateTime.now(), uris, false);
 
         System.out.println(viewStatsDto);
-
     }
 }

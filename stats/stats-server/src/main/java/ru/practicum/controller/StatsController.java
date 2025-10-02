@@ -2,38 +2,36 @@ package ru.practicum.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.EndpointHitDto;
+import ru.practicum.CreateEndpointHitDto;
+import ru.practicum.StatsRequest;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.service.StatsService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Validated
 public class StatsController {
     private final StatsService statsService;
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/hit")
-    public void createHit(@Valid @RequestBody EndpointHitDto endpointHitDto) {
-        statsService.createHit(endpointHitDto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createHit(@Valid @RequestBody CreateEndpointHitDto createEndpointHitDto) {
+        log.info("Controller: createHit requestBody={}", createEndpointHitDto);
+        statsService.createHit(createEndpointHitDto);
     }
 
     @GetMapping("/stats")
-    public List<ViewStatsDto> getStats(
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-            @RequestParam(required = false) List<String> uris,
-            @RequestParam(defaultValue = "false") boolean unique
-    ) {
-        if (start.isAfter(end)) throw new IllegalArgumentException("Дата окончания должна быть больше даты начала");
-        return statsService.getStats(start, end, uris, unique);
+    public List<ViewStatsDto> getStats(@RequestParam("start") String start, @RequestParam("end") String end,
+                                 @RequestParam(value = "uris", required = false) List<String> uris,
+                                 @RequestParam(value = "unique", defaultValue = "false") boolean unique) {
+        log.debug("start={}, end={}, uris={}, unique={}", start, end, uris, unique);
+        StatsRequest request = StatsRequest.of(start, end, uris, unique);
+        log.info("Controller: getStats request={}", request);
+        return statsService.getStats(request);
     }
-
 }

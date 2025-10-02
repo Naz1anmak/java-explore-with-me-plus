@@ -3,7 +3,7 @@ services:
     image: postgres:16.1
     container_name: stats_db
     ports:
-      - "6541:5432"
+      - "5432:5432"
     environment:
       - POSTGRES_DB=statDB
       - POSTGRES_USER=dbuser
@@ -47,7 +47,6 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - stats-server
       - main-db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://main-db:5432/mainDB
