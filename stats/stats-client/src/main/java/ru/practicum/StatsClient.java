@@ -2,8 +2,13 @@ package ru.practicum;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriBuilder;
+import ru.practicum.exception.StatsClientException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,44 +23,53 @@ public class StatsClient {
     public StatsClient(@Value("${stats-server.url:http://localhost:9090}") String serverUrl) {
         this.restClient = RestClient.builder()
                 .baseUrl(serverUrl)
-                .defaultHeader("Content-Type", "application/json")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
 
     public void saveHit(CreateEndpointHitDto createEndpointHitDto) {
-        restClient.post()
-                .uri("/hit")
-                .body(createEndpointHitDto)
-                .retrieve()
-                .toBodilessEntity();
+        try {
+            restClient.post()
+                    .uri("/hit")
+                    .body(createEndpointHitDto)
+                    .retrieve()
+                    .toBodilessEntity();
 
-        log.debug("Запись обращения к эндпоинту успешно сохранена: приложение {}, URI {}",
-                createEndpointHitDto.app(), createEndpointHitDto.uri());
+            log.debug("Запись обращения к эндпоинту успешно сохранена: приложение {}, URI {}",
+                    createEndpointHitDto.app(), createEndpointHitDto.uri());
+        } catch (Exception exception) {
+            log.error("Ошибка при сохранении статистики: {}", exception.getMessage());
+            throw new StatsClientException("Endpoint statistics could not be saved", exception);
+        }
     }
 
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end,
                                        List<String> uris, Boolean unique) {
-        String startStr = start.format(formatter);
-        String endStr = end.format(formatter);
+        try {
+            List<ViewStatsDto> result = restClient.get()
+                    .uri(uriBuilder -> {
+                        UriBuilder builder = uriBuilder.path("/stats")
+                                .queryParam("start", start.format(formatter))
+                                .queryParam("end", end.format(formatter));
 
-        ViewStatsDto[] stats = restClient.get()
-                .uri(uriBuilder -> {
-                    uriBuilder.path("/stats")
-                            .queryParam("start", startStr)
-                            .queryParam("end", endStr);
-                    if (uris != null && !uris.isEmpty()) {
-                        uriBuilder.queryParam("uris", String.join(",", uris));
-                    }
-                    if (unique != null) {
-                        uriBuilder.queryParam("unique", unique);
-                    }
-                    return uriBuilder.build();
-                })
-                .retrieve()
-                .body(ViewStatsDto[].class);
+                        if (uris != null && !uris.isEmpty()) {
+                            uris.forEach(uri -> builder.queryParam("uris", uri));
+                        }
+                        if (unique != null) {
+                            builder.queryParam("unique", unique);
+                        }
+                        return builder.build();
+                    })
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<>() {
+                    });
 
-        List<ViewStatsDto> result = stats != null ? List.of(stats) : List.of();
-        log.debug("Получено записей статистики {}", result.size());
-        return result;
+            log.debug("Получено записей статистики: {}", result != null ? result.size() : 0);
+            return result != null ? result : List.of();
+
+        } catch (Exception exception) {
+            log.error("Ошибка при получении статистики: {}", exception.getMessage());
+            throw new StatsClientException("Couldn't get statistics", exception);
+        }
     }
 }
