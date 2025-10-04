@@ -1,0 +1,75 @@
+package ru.practicum;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriBuilder;
+import ru.practicum.exception.StatsClientException;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+@Slf4j
+@Component
+public class StatsClient {
+    private final RestClient restClient;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    public StatsClient(@Value("${stats-server.url:http://localhost:9090}") String serverUrl) {
+        this.restClient = RestClient.builder()
+                .baseUrl(serverUrl)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+    }
+
+    public void saveHit(CreateEndpointHitDto createEndpointHitDto) {
+        try {
+            restClient.post()
+                    .uri("/hit")
+                    .body(createEndpointHitDto)
+                    .retrieve()
+                    .toBodilessEntity();
+
+            log.debug("Запись обращения к эндпоинту успешно сохранена: приложение {}, URI {}",
+                    createEndpointHitDto.app(), createEndpointHitDto.uri());
+        } catch (Exception exception) {
+            log.error("Ошибка при сохранении статистики: {}", exception.getMessage());
+            throw new StatsClientException("Endpoint statistics could not be saved", exception);
+        }
+    }
+
+    public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end,
+                                       List<String> uris, Boolean unique) {
+        try {
+            List<ViewStatsDto> result = restClient.get()
+                    .uri(uriBuilder -> {
+                        UriBuilder builder = uriBuilder.path("/stats")
+                                .queryParam("start", start.format(formatter))
+                                .queryParam("end", end.format(formatter));
+
+                        if (uris != null && !uris.isEmpty()) {
+                            uris.forEach(uri -> builder.queryParam("uris", uri));
+                        }
+                        if (unique != null) {
+                            builder.queryParam("unique", unique);
+                        }
+                        return builder.build();
+                    })
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<>() {
+                    });
+
+            log.debug("Получено записей статистики: {}", result != null ? result.size() : 0);
+            return result != null ? result : List.of();
+
+        } catch (Exception exception) {
+            log.error("Ошибка при получении статистики: {}", exception.getMessage());
+            throw new StatsClientException("Couldn't get statistics", exception);
+        }
+    }
+}
