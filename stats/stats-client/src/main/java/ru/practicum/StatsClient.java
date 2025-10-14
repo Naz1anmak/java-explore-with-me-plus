@@ -65,11 +65,11 @@ public class StatsClient {
                     });
 
             log.debug("Получено записей статистики: {}", result != null ? result.size() : 0);
-            return result != null ? result : List.of();
 
+            return result;
         } catch (Exception exception) {
             log.error("Ошибка при получении статистики: {}", exception.getMessage());
-            throw new StatsClientException("Couldn't get statistics", exception);
+            return List.of();
         }
     }
 }
