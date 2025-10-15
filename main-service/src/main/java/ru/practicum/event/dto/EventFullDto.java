@@ -2,8 +2,7 @@ package ru.practicum.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import ru.practicum.category.dto.CategoryDto;
-import ru.practicum.event.EventState;
-import ru.practicum.location.dto.LocationDto;
+import ru.practicum.event.model.EventState;
 import ru.practicum.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
@@ -17,12 +16,12 @@ public record EventFullDto(
 
         Long confirmedRequests,
 
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime createdOn,
 
         String description,
 
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime eventDate,
 
         UserShortDto initiator,
@@ -33,7 +32,7 @@ public record EventFullDto(
 
         Integer participantLimit,
 
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime publishedOn,
 
         boolean requestModeration,

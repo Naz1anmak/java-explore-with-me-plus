@@ -1,6 +1,6 @@
 package ru.practicum.request.dto;
 
-import ru.practicum.request.RequestStatus;
+import ru.practicum.request.model.RequestStatus;
 
 import java.util.List;
 

@@ -11,7 +11,7 @@ public record NewCompilationDto(
         boolean pinned,
 
         @NotBlank(message = "Заголовок подборки не может быть пустым")
-        @Size(min = 1, max = 50, message = "Заголовок должен содержать от 1 до 50 символов")
+        @Size(min = 1, max = 50, message = "Заголовок должен содержать от {min} до {max} символов")
         String title
 ) {
 }

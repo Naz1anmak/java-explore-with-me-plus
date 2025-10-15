@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-import ru.practicum.event.StateActionAdmin;
-import ru.practicum.location.dto.LocationDto;
+import ru.practicum.event.model.StateActionAdmin;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +18,7 @@ public record UpdateEventAdminRequest(
         String description,
 
         @Future(message = "Дата события должна быть в будущем")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime eventDate,
 
         LocationDto location,
