@@ -23,12 +23,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@Validated
 public class PrivateEventController {
     private final EventService eventService;
     private final RequestService requestService;
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{userId}/events")
     public List<EventShortDto> getEvents(
             @PathVariable("userId") Long userId,
@@ -39,8 +37,8 @@ public class PrivateEventController {
         return eventService.getEvents(userId, pageable);
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{userId}/events")
+    @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto createEvent(
             @PathVariable("userId") Long userId,
             @Valid @RequestBody NewEventDto newEventDto
@@ -63,7 +61,7 @@ public class PrivateEventController {
     public EventFullDto updateEvent(
             @PathVariable("userId") Long userId,
             @PathVariable("eventId") Long eventId,
-            @Valid @RequestBody UpdateEventUserRequest request
+            @RequestBody @Valid UpdateEventUserRequest request
     ) {
         return eventService.updateEvent(userId, eventId, request);
     }
@@ -86,5 +84,4 @@ public class PrivateEventController {
     ) {
         return requestService.updateRequestStatus(userId, eventId, request);
     }
-
 }

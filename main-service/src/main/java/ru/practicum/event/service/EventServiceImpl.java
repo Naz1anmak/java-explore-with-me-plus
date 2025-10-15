@@ -29,8 +29,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
-    private static final String ENDPOINT = "/events";
-
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final UserService userService;
@@ -79,7 +77,7 @@ public class EventServiceImpl implements EventService {
         userService.checkUser(userId);
         Event event = getEventOrThrow(eventId, userId);
 
-        saveHit(ENDPOINT + "/" + eventId, ip);
+        saveHit( "/events/" + eventId, ip);
 
         Map<Long, Long> confirmedRequests = getConfirmedRequests(List.of(event.getId()));
         Map<Long, Long> views = getViewsForEvents(List.of(event.getId()));
@@ -236,7 +234,7 @@ public class EventServiceImpl implements EventService {
                 ))
                 .collect(Collectors.toList());
 
-        saveHit(ENDPOINT, ip);
+        saveHit("/events", ip);
 
         if ("VIEWS".equals(request.sort())) {
             return result.stream()
@@ -252,7 +250,7 @@ public class EventServiceImpl implements EventService {
                 .filter(ev -> EventState.PUBLISHED.toString().equals(ev.getState()))
                 .orElseThrow(() -> new EventNotFoundException("Событие c id " + eventId + " не найдено"));
 
-        saveHit(ENDPOINT + "/" + eventId, ip);
+        saveHit("/events/" + eventId, ip);
 
         Map<Long, Long> confirmedRequests = getConfirmedRequests(List.of(event.getId()));
         Map<Long, Long> views = getViewsForEvents(List.of(event.getId()));
@@ -313,7 +311,7 @@ public class EventServiceImpl implements EventService {
         if (eventIds.isEmpty()) return Map.of();
 
         List<String> uris = eventIds.stream()
-                .map(id -> ENDPOINT + "/" + id)
+                .map(id -> "/events/" + id)
                 .collect(Collectors.toList());
 
         LocalDateTime start = eventRepository.findFirstByOrderByCreatedOnAsc().getCreatedOn();
@@ -337,10 +335,9 @@ public class EventServiceImpl implements EventService {
 
     private Long getEventIdFromUri(String uri) {
         try {
-            return Long.parseLong(uri.substring(ENDPOINT.length() + 1));
+            return Long.parseLong(uri.substring("/events".length() + 1));
         } catch (Exception e) {
             return -1L;
         }
     }
-
 }

@@ -18,7 +18,6 @@ import java.util.List;
 public class AdminEventController {
     private final EventService eventService;
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<EventFullDto> getEventsAdmin(@ModelAttribute @Valid SearchEventAdminRequest request) {
         int size = (request.size() != null && request.size() > 0) ? request.size() : 10;
@@ -27,7 +26,6 @@ public class AdminEventController {
         return eventService.getEventsAdmin(request, pageRequest);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{eventId}")
     public EventFullDto updateEventAdmin(
             @PathVariable Long eventId,
@@ -35,5 +33,4 @@ public class AdminEventController {
     ) {
         return eventService.updateEventAdmin(eventId, request);
     }
-
 }

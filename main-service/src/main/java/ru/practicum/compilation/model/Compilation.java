@@ -6,23 +6,24 @@ import ru.practicum.event.model.Event;
 
 import java.util.Set;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Table(name = "compilation")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = PROTECTED)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false, length = 50)
     private String title;
 
     @Column(nullable = false)
-    @Builder.Default
     private boolean pinned = false;
 
     @ManyToMany

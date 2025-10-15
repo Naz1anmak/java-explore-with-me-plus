@@ -41,5 +41,4 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             GROUP BY r.event.id"""
     )
     EventWithCountConfirmedRequests findConfirmedRequestsCountByEventIds(@Param("eventId") Long eventId);
-
 }

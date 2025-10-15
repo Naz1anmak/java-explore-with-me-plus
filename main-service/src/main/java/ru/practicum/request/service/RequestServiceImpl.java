@@ -105,5 +105,4 @@ public class RequestServiceImpl implements RequestService {
 
         return requestMapper.toEventRequestStatusUpdateResultDto(confirmedRequests, rejectedRequests);
     }
-
 }

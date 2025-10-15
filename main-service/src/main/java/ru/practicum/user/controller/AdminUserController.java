@@ -16,16 +16,14 @@ import java.util.List;
 @RequestMapping("/admin/users")
 @RequiredArgsConstructor
 public class AdminUserController {
-
     private final UserService userService;
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody NewUserRequest userRequest) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto createUser(@RequestBody @Valid NewUserRequest userRequest) {
         return userService.createUser(userRequest);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<UserDto> getUsers(
             @RequestParam(required = false) List<Long> ids,
@@ -36,8 +34,8 @@ public class AdminUserController {
         return userService.getUsers(ids, pageable);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
     }

@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
@@ -70,5 +69,4 @@ public class UserServiceImpl implements UserService {
         checkUser(userId);
         return userRepository.findById(userId).get();
     }
-
 }

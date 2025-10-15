@@ -7,17 +7,17 @@ import ru.practicum.user.model.User;
 
 import java.time.LocalDateTime;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Table(name = "events")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = PROTECTED)
 public class Event {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false, length = 120)
@@ -54,15 +54,12 @@ public class Event {
     private EventLocation location;
 
     @Column(nullable = false)
-    @Builder.Default
     private Boolean paid = false;
 
     @Column(name = "participant_limit", nullable = false)
-    @Builder.Default
     private Integer participantLimit = 0;
 
     @Column(name = "request_moderation", nullable = false)
-    @Builder.Default
     private Boolean requestModeration = true;
 
     @Column(nullable = false, length = 20)

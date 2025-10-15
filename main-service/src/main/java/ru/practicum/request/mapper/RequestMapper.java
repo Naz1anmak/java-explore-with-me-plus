@@ -18,5 +18,4 @@ public interface RequestMapper {
             List<ParticipationRequestDto> confirmedRequests,
             List<ParticipationRequestDto> rejectedRequests
     );
-
 }

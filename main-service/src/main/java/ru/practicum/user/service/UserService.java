@@ -20,5 +20,4 @@ public interface UserService {
     UserShortDto getUserShortDtoById(Long userId);
 
     User getUserById(Long userId);
-
 }

@@ -10,7 +10,7 @@ public record NewUserRequest(
         String name,
 
         @NotBlank(message = "Email пользователя не может быть пустой")
-        @Email
+        @Email(message = "Email пользователя введен не верно")
         @Size(min = 6, max = 254)
         String email
 ) {
