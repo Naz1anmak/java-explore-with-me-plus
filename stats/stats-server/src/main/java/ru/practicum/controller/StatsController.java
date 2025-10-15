@@ -20,7 +20,7 @@ public class StatsController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createHit(@Valid @RequestBody CreateEndpointHitDto createEndpointHitDto) {
+    public void createHit(@RequestBody @Valid CreateEndpointHitDto createEndpointHitDto) {
         log.info("Controller: createHit requestBody={}", createEndpointHitDto);
         statsService.createHit(createEndpointHitDto);
     }

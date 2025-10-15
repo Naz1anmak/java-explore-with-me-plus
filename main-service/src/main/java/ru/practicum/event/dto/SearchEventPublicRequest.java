@@ -18,7 +18,7 @@ public record SearchEventPublicRequest(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime rangeEnd,
 
-        Boolean onlyAvailable,
+        boolean onlyAvailable,
 
         String sort,
 

@@ -1,1 +1,1 @@
-When performing a code review, respond in Russian
+When performing a code review, respond in Russian!

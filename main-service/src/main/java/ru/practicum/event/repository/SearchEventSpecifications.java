@@ -61,7 +61,7 @@ public class SearchEventSpecifications {
     public static Specification<Event> isPaid(Boolean paid) {
         return (root, query, criteriaBuilder) -> {
             if (paid == null) return criteriaBuilder.conjunction();
-            return criteriaBuilder.equal(root.get("isPaid"), paid);
+            return criteriaBuilder.equal(root.get("paid"), paid);
         };
     }
 

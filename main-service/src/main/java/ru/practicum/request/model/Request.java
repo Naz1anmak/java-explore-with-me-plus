@@ -1,19 +1,20 @@
 package ru.practicum.request.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.event.model.Event;
 import ru.practicum.user.model.User;
 
 import java.time.LocalDateTime;
 
-import static lombok.AccessLevel.PROTECTED;
-
 @Entity
-@Table(name = "request")
+@Table(name = "requests")
 @Getter
-@Setter
-@NoArgsConstructor(access = PROTECTED)
+@Setter(AccessLevel.PROTECTED)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,4 +33,12 @@ public class Request {
 
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
+
+    public void confirmed() {
+        this.status = RequestStatus.CONFIRMED;
+    }
+
+    public void rejected() {
+        this.status = RequestStatus.REJECTED;
+    }
 }

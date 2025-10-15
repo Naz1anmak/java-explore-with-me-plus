@@ -1,12 +1,14 @@
 package ru.practicum.event.model;
 
-import lombok.*;
-
-import static lombok.AccessLevel.PROTECTED;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 public class EventWithCountConfirmedRequests {
     private Long eventId;
     private Long countConfirmedRequests;

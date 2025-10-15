@@ -44,7 +44,7 @@ public class StatsClient {
     }
 
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end,
-                                       List<String> uris, Boolean unique) {
+                                       List<String> uris, boolean unique) {
         try {
             List<ViewStatsDto> result = restClient.get()
                     .uri(uriBuilder -> {
@@ -55,9 +55,9 @@ public class StatsClient {
                         if (uris != null && !uris.isEmpty()) {
                             uris.forEach(uri -> builder.queryParam("uris", uri));
                         }
-                        if (unique != null) {
-                            builder.queryParam("unique", unique);
-                        }
+
+                        builder.queryParam("unique", unique);
+
                         return builder.build();
                     })
                     .retrieve()
@@ -69,7 +69,7 @@ public class StatsClient {
             return result;
         } catch (Exception exception) {
             log.error("Ошибка при получении статистики: {}", exception.getMessage());
-            return List.of();
+            throw new StatsClientException("Statistics could not be retrieved", exception);
         }
     }
 }

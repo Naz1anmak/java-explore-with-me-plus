@@ -1,15 +1,15 @@
 package ru.practicum.category.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import static lombok.AccessLevel.PROTECTED;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "category")
+@Table(name = "categories")
 @Getter
-@Setter
-@NoArgsConstructor(access = PROTECTED)
+@Setter(AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Category {
     @Id

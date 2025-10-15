@@ -2,8 +2,8 @@ package ru.practicum.event.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.SearchEventAdminRequest;
@@ -12,6 +12,7 @@ import ru.practicum.event.service.EventService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/events")
@@ -23,6 +24,7 @@ public class AdminEventController {
         int size = (request.size() != null && request.size() > 0) ? request.size() : 10;
         int from = request.from() != null ? request.from() : 0;
         PageRequest pageRequest = PageRequest.of(from / size, size);
+        log.debug("Controller: getEventAdmin with filters {}", request);
         return eventService.getEventsAdmin(request, pageRequest);
     }
 
@@ -31,6 +33,7 @@ public class AdminEventController {
             @PathVariable Long eventId,
             @RequestBody @Valid UpdateEventAdminRequest request
     ) {
+        log.debug("Controller: updateEventAdmin with id={} with data {}", eventId, request);
         return eventService.updateEventAdmin(eventId, request);
     }
 }

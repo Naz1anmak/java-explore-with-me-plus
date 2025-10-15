@@ -1,18 +1,18 @@
 package ru.practicum.compilation.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.event.model.Event;
 
 import java.util.Set;
 
-import static lombok.AccessLevel.PROTECTED;
-
 @Entity
-@Table(name = "compilation")
+@Table(name = "compilations")
 @Getter
-@Setter
-@NoArgsConstructor(access = PROTECTED)
+@Setter(AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Compilation {
     @Id
@@ -26,7 +26,7 @@ public class Compilation {
     @Column(nullable = false)
     private boolean pinned = false;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "compilation_events",
             joinColumns = @JoinColumn(name = "compilation_id"),
