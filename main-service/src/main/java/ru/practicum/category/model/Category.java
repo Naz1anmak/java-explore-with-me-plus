@@ -1,7 +1,6 @@
 package ru.practicum.category.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +8,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "categories")
 @Getter
-@Setter(AccessLevel.PROTECTED)
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Category {
     @Id
