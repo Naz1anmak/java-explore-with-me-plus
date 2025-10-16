@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.CreateEndpointHitDto;
 import ru.practicum.StatsClient;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.category.dto.CategoryDto;
+import ru.practicum.category.model.Category;
+import ru.practicum.category.service.CategoryService;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.*;
@@ -38,7 +41,7 @@ public class EventServiceImpl implements EventService {
     private final UserService userService;
     private final RequestRepository requestRepository;
     private final StatsClient statsClient;
-//    private final CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @Override
     @Transactional
@@ -46,8 +49,14 @@ public class EventServiceImpl implements EventService {
         validateDateEvent(newEventDto.eventDate(), 2);
 
         User user = userService.getUserById(userId);
-//        Category category = categoryService.getCategoryById(newEventDto.category()); TODO
+
+        CategoryDto categoryDto = categoryService.getCategoryById(newEventDto.category());
+        Category category = new Category();
+        category.setId(categoryDto.id());
+        category.setName(categoryDto.name());
+
         Event event = eventMapper.fromNewEvent(newEventDto, user, EventState.PENDING);
+        event.setCategory(category);
         log.info("Создано новое событие: {}", event);
         return eventMapper.toEventFullDto(eventRepository.save(event), 0L, 0L);
     }
