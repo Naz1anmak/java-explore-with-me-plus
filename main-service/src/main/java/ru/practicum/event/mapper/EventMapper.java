@@ -1,6 +1,7 @@
 package ru.practicum.event.mapper;
 
 import org.mapstruct.*;
+import org.mapstruct.factory.Mappers;
 import ru.practicum.category.model.Category;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.model.Event;
@@ -9,6 +10,7 @@ import ru.practicum.user.model.User;
 
 @Mapper(componentModel = "spring", uses = {LocationMapper.class})
 public interface EventMapper {
+    EventMapper eventMapper = Mappers.getMapper(EventMapper.class);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "publishedOn", ignore = true)
@@ -17,6 +19,8 @@ public interface EventMapper {
     Event fromNewEvent(NewEventDto dto, User initiator, Category category, EventState state);
 
     EventShortDto toEventShortDto(Event event, Integer confirmedRequests, Long views);
+
+    EventShortDto toEventShortWithoutRequestsAndViewsDto(Event event);
 
     EventFullDto toEventFullDto(Event event, Integer confirmedRequests, Long views);
 
