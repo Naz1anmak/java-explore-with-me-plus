@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.CreateEndpointHitDto;
 import ru.practicum.StatsRequest;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.exception.BadRequestException;
 import ru.practicum.service.StatsService;
 
 import java.util.List;
@@ -30,6 +31,10 @@ public class StatsController {
                                        @RequestParam(value = "uris", required = false) List<String> uris,
                                        @RequestParam(value = "unique", defaultValue = "false") boolean unique) {
         StatsRequest request = StatsRequest.of(start, end, uris, unique);
+
+        if (request.start().isAfter(request.end()))
+            throw new BadRequestException("Дата начала должна быть раньше даты окончания");
+
         log.debug("Controller: getStats request={}", request);
         return statsService.getStats(request);
     }

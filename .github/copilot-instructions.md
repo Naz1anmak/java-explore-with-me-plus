@@ -1,1 +1,1 @@
-When performing a code review, respond in Russian.
+Комментарии в Pull Request обязательно должны быть на русском языке!

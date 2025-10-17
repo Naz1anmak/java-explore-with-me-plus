@@ -2,12 +2,15 @@ package ru.practicum.compilation.dto;
 
 import ru.practicum.event.dto.EventShortDto;
 
-import java.util.List;
+import java.util.Set;
 
 public record CompilationDto(
         Long id,
-        List<EventShortDto> events,
+
+        Set<EventShortDto> events,
+
         boolean pinned,
+
         String title
 ) {
 }
