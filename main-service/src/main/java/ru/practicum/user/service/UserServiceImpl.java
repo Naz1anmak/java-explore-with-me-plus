@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userMapper.toEntity(userRequest);
         user = userRepository.save(user);
-        log.info("Добавлен новый пользователь \"{}\" c id {}", user.getName(), user.getId());
+        log.info("Добавлен новый пользователь {}", user);
         return userMapper.toDto(user);
     }
 

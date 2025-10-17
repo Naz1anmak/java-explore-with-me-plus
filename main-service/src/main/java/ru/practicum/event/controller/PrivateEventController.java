@@ -2,6 +2,8 @@ package ru.practicum.event.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -22,66 +24,66 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/users/{userId}/events")
 @RequiredArgsConstructor
 public class PrivateEventController {
     private final EventService eventService;
     private final RequestService requestService;
 
-    @GetMapping("/{userId}/events")
+    @GetMapping
     public List<EventShortDto> getEvents(
-            @PathVariable("userId") Long userId,
-            @RequestParam(defaultValue = "0") Integer from,
-            @RequestParam(defaultValue = "10") Integer size
+            @PathVariable("userId") @Positive Long userId,
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(defaultValue = "10") @Positive Integer size
     ) {
         Pageable pageable = PageRequest.of(from / size, size);
         log.debug("Controller: getEvents with id={} with pageable {}", userId, pageable);
         return eventService.getEvents(userId, pageable);
     }
 
-    @PostMapping("/{userId}/events")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto createEvent(
-            @PathVariable("userId") Long userId,
-             @RequestBody @Valid NewEventDto newEventDto
+            @PathVariable("userId") @Positive Long userId,
+            @RequestBody @Valid NewEventDto newEventDto
     ) {
         log.debug("Controller: createEvent with id={} with data {}", userId, newEventDto);
         return eventService.createEvent(userId, newEventDto);
     }
 
-    @GetMapping("/{userId}/events/{eventId}")
+    @GetMapping("/{eventId}")
     public EventFullDto getEvent(
-            @PathVariable("userId") Long userId,
-            @PathVariable("eventId") Long eventId,
+            @PathVariable("userId") @Positive Long userId,
+            @PathVariable("eventId") @Positive Long eventId,
             HttpServletRequest request
     ) {
         log.debug("Controller: getEvent with id={} and eventId={}", userId, eventId);
         return eventService.getEvent(userId, eventId, request.getRemoteAddr());
     }
 
-    @PatchMapping("/{userId}/events/{eventId}")
+    @PatchMapping("/{eventId}")
     public EventFullDto updateEvent(
-            @PathVariable("userId") Long userId,
-            @PathVariable("eventId") Long eventId,
+            @PathVariable("userId") @Positive Long userId,
+            @PathVariable("eventId") @Positive Long eventId,
             @RequestBody @Valid UpdateEventUserRequest request
     ) {
         log.debug("Controller: updateEvent with id={} and eventId={} with data {}", userId, eventId, request);
         return eventService.updateEvent(userId, eventId, request);
     }
 
-    @GetMapping("/{userId}/events/{eventId}/requests")
+    @GetMapping("/{eventId}/requests")
     public List<ParticipationRequestDto> getRequestsByEvent(
-            @PathVariable("userId") Long userId,
-            @PathVariable("eventId") Long eventId
+            @PathVariable("userId") @Positive Long userId,
+            @PathVariable("eventId") @Positive Long eventId
     ) {
         log.debug("Controller: getRequestsByEvent with id={} and eventId={}", userId, eventId);
         return requestService.getRequestsByEvent(userId, eventId);
     }
 
-    @PatchMapping("/{userId}/events/{eventId}/requests")
+    @PatchMapping("/{eventId}/requests")
     public EventRequestStatusUpdateResult updateRequestStatus(
-            @PathVariable("userId") Long userId,
-            @PathVariable("eventId") Long eventId,
+            @PathVariable("userId") @Positive Long userId,
+            @PathVariable("eventId") @Positive Long eventId,
             @RequestBody EventRequestStatusUpdateRequest request
     ) {
         log.debug("Controller: updateRequestStatus with id={} and eventId={} with data {}", userId, eventId, request);

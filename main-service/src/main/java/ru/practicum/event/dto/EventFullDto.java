@@ -28,14 +28,14 @@ public record EventFullDto(
 
         LocationDto location,
 
-        boolean paid,
+        Boolean paid,
 
         Integer participantLimit,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime publishedOn,
 
-        boolean requestModeration,
+        Boolean requestModeration,
 
         EventState state,
 

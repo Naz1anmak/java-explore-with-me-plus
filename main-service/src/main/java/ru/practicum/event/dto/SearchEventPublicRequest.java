@@ -1,6 +1,6 @@
 package ru.practicum.event.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,13 +12,13 @@ public record SearchEventPublicRequest(
 
         Boolean paid,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime rangeStart,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime rangeEnd,
 
-        boolean onlyAvailable,
+        Boolean onlyAvailable,
 
         String sort,
 
@@ -26,4 +26,18 @@ public record SearchEventPublicRequest(
 
         Integer size
 ) {
+    public SearchEventPublicRequest {
+        if (onlyAvailable == null) {
+            onlyAvailable = false;
+        }
+        if (sort == null) {
+            sort = "EVENT_DATE";
+        }
+        if (from == null) {
+            from = 0;
+        }
+        if (size == null) {
+            size = 10;
+        }
+    }
 }

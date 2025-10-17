@@ -62,7 +62,7 @@ public class Event {
     private Integer participantLimit;
 
     @Column(name = "request_moderation", nullable = false)
-    private boolean requestModeration = true;
+    private boolean requestModeration;
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)

@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.event.model.EventWithCountConfirmedRequests;
+import ru.practicum.request.dto.ParticipationRequestDto;
 import ru.practicum.request.model.Request;
+import ru.practicum.request.model.RequestStatus;
 
 import java.util.List;
 
@@ -35,10 +37,20 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findAllRequestById(@Param("requestIds") List<Long> requestIds);
 
     @Query("""
-            SELECT NEW ru.practicum.event.model.EventWithCountConfirmedRequests(r.event.id, COUNT(r))
+            SELECT NEW ru.practicum.request.dto.ParticipationRequestDto(
+                r.id,
+                r.created,
+                r.event.id,
+                r.requester.id,
+                r.status)
             FROM Request r
-            WHERE r.event.id = :eventId AND r.status = ru.practicum.request.model.RequestStatus.CONFIRMED
-            GROUP BY r.event.id"""
+            WHERE r.requester.id = :userId"""
     )
-    EventWithCountConfirmedRequests findConfirmedRequestsCountByEventIds(@Param("eventId") Long eventId);
+    List<ParticipationRequestDto> findAllRequestsByUserId(@Param("userId") Long userId);
+
+    boolean existsByEventIdAndRequesterId(Long eventId, Long userId);
+
+    int countByEventIdAndStatus(Long id, RequestStatus requestStatus);
+
+    List<Request> findAllByEventIdAndStatus(Long eventId, RequestStatus requestStatus);
 }
