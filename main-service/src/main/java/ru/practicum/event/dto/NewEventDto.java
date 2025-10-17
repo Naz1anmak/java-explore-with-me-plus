@@ -25,15 +25,26 @@ public record NewEventDto(
         @NotNull(message = "Место проведения события не может быть null")
         LocationDto location,
 
-        boolean paid,
+        Boolean paid,
 
         @PositiveOrZero(message = "Лимит участников события должен быть нулевым или больше нуля")
         Integer participantLimit,
 
-        boolean requestModeration,
+        Boolean requestModeration,
 
         @NotBlank(message = "Название события не может быть пустым")
         @Size(min = 3, max = 120, message = "Заголовок должен содержать от 3 до 120 символов")
         String title
 ) {
+    public NewEventDto {
+        if (paid == null) {
+            paid = Boolean.FALSE;
+        }
+        if (participantLimit == null) {
+            participantLimit = 0;
+        }
+        if (requestModeration == null) {
+            requestModeration = Boolean.TRUE;
+        }
+    }
 }

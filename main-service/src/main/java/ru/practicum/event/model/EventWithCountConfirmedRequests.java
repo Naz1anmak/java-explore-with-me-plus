@@ -1,15 +1,16 @@
 package ru.practicum.event.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class EventWithCountConfirmedRequests {
     private Long eventId;
-    private Long countConfirmedRequests;
+    private int countConfirmedRequests;
+
+    public EventWithCountConfirmedRequests(Long eventId, Long countConfirmedRequestsLong) {
+        this.eventId = eventId;
+        this.countConfirmedRequests = (countConfirmedRequestsLong == null) ? 0 : countConfirmedRequestsLong.intValue();
+    }
 }

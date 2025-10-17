@@ -15,7 +15,7 @@ public interface EventService {
 
     EventFullDto updateEvent(Long userId, Long eventId, UpdateEventUserRequest request);
 
-    Event getEventOrThrow(Long eventId, Long userId);
+    Event getEventOrThrow(Long eventId);
 
     List<EventFullDto> getEventsAdmin(SearchEventAdminRequest request, Pageable pageable);
 

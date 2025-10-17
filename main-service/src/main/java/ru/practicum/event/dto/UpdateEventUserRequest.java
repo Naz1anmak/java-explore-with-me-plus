@@ -23,12 +23,12 @@ public record UpdateEventUserRequest(
 
         LocationDto location,
 
-        boolean paid,
+        Boolean paid,
 
         @PositiveOrZero(message = "Лимит участников события должен быть нулевым или больше нуля")
         Integer participantLimit,
 
-        boolean requestModeration,
+        Boolean requestModeration,
 
         StateActionUser stateAction,
 

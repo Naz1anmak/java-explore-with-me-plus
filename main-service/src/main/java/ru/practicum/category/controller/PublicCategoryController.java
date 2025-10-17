@@ -30,7 +30,7 @@ public class PublicCategoryController {
     }
 
     @GetMapping("/{categoryId}")
-    public CategoryDto getCategoryById(@PathVariable Long categoryId) {
+    public CategoryDto getCategoryById(@PathVariable @Positive Long categoryId) {
         log.debug("Controller: getCategoryById with id={}", categoryId);
         return categoryService.getCategoryById(categoryId);
     }

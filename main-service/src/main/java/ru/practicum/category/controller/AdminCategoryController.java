@@ -1,6 +1,7 @@
 package ru.practicum.category.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,22 +20,22 @@ public class AdminCategoryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto createCategory(@RequestBody @Valid NewCategoryDto newCategoryDto) {
-        log.debug("Controller: createCategory with data {}", newCategoryDto);
+        log.debug("Controller: createCategory data {}", newCategoryDto);
         return categoryService.createCategory(newCategoryDto);
     }
 
     @DeleteMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable Long categoryId) {
-        log.debug("Controller: deleteCategory with id={}", categoryId);
+    public void deleteCategory(@PathVariable @Positive Long categoryId) {
+        log.debug("Controller: deleteCategory id={}", categoryId);
         categoryService.deleteCategory(categoryId);
     }
 
     @PatchMapping("/{categoryId}")
     public CategoryDto updateCategory(
-            @PathVariable Long categoryId,
+            @PathVariable @Positive Long categoryId,
             @RequestBody @Valid NewCategoryDto newCategoryDto) {
-        log.debug("Controller: updateCategory with id={} with data={}", categoryId, newCategoryDto);
+        log.debug("Controller: updateCategory id={}, data={}", categoryId, newCategoryDto);
         return categoryService.updateCategory(categoryId, newCategoryDto);
     }
 }

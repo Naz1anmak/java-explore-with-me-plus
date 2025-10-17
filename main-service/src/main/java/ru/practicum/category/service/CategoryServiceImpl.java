@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category savedCategory = categoryRepository.save(category);
 
-        log.info("Создана новая категория: {}", savedCategory);
+        log.info("Создана категория: {}", savedCategory);
         return categoryMapper.toDto(savedCategory);
     }
 
@@ -86,10 +86,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto getCategoryById(Long categoryId) {
         Category category = getCategoryByIdOrThrow(categoryId);
-        CategoryDto result = categoryMapper.toDto(category);
+        return categoryMapper.toDto(category);
+    }
 
-        log.info("Найдена категория: {}", result);
-        return result;
+    @Override
+    public Category getCategoryByIdOrThrow(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("Категория с id " + categoryId + " не найдена"));
     }
 
     private void checkCategoryNameUnique(String name, Long excludedId) {
@@ -100,10 +103,5 @@ public class CategoryServiceImpl implements CategoryService {
         existingCategory.ifPresent(category -> {
             throw new ConflictException("Категория с названием '" + name + "' уже существует");
         });
-    }
-
-    private Category getCategoryByIdOrThrow(Long categoryId) {
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException("Категория с id " + categoryId + " не найдена"));
     }
 }

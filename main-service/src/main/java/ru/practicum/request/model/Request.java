@@ -1,10 +1,10 @@
 package ru.practicum.request.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.event.model.Event;
 import ru.practicum.user.model.User;
 
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "requests")
 @Getter
-@Setter(AccessLevel.PROTECTED)
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Request {
     @Id
@@ -21,14 +21,15 @@ public class Request {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
     private User requester;
 
+    @CreationTimestamp
     private LocalDateTime created;
 
     @Enumerated(EnumType.STRING)
@@ -40,5 +41,9 @@ public class Request {
 
     public void rejected() {
         this.status = RequestStatus.REJECTED;
+    }
+
+    public void canceled() {
+        this.status = RequestStatus.CANCELED;
     }
 }

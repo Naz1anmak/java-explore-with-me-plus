@@ -2,6 +2,7 @@ package ru.practicum.user.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -31,8 +32,8 @@ public class AdminUserController {
     @GetMapping
     public List<UserDto> getUsers(
             @RequestParam(required = false) List<Long> ids,
-            @RequestParam(defaultValue = "0") int from,
-            @Positive @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+            @RequestParam(defaultValue = "10") @Positive int size
     ) {
         Pageable pageable = PageRequest.of(from / size, size);
         log.debug("Controller: getUsers ids={}", ids);
@@ -41,7 +42,7 @@ public class AdminUserController {
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Long userId) {
+    public void deleteUser(@PathVariable @Positive Long userId) {
         log.debug("Controller: deleteUser id={}", userId);
         userService.deleteUser(userId);
     }

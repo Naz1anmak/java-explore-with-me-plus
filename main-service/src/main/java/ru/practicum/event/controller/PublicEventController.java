@@ -2,6 +2,7 @@ package ru.practicum.event.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +34,7 @@ public class PublicEventController {
     }
 
     @GetMapping("/{id}")
-    public EventFullDto getEventByIdPublic(@PathVariable Long id, HttpServletRequest request) {
+    public EventFullDto getEventByIdPublic(@PathVariable @Positive Long id, HttpServletRequest request) {
         log.debug("Controller: getEventByIdPublic with id={}", id);
         return eventService.getEventByIdPublic(id, request.getRemoteAddr());
     }
