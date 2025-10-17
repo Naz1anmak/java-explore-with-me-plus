@@ -22,9 +22,8 @@ public class PublicEventController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventShortDto> getEventsPublic(
-            @ModelAttribute @Valid SearchEventPublicRequest request,
-            HttpServletRequest httpRequest
+    public List<EventShortDto> getEventsPublic(@ModelAttribute @Valid SearchEventPublicRequest request,
+                                               HttpServletRequest httpRequest
     ) {
         int size = (request.size() != null && request.size() > 0) ? request.size() : 10;
         int from = request.from() != null ? request.from() : 0;

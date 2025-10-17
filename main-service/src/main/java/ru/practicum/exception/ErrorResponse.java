@@ -5,5 +5,6 @@ public record ErrorResponse(
         String httpMethod,
         int statusCode,
         String error,
-        String message) {
+        String message
+) {
 }

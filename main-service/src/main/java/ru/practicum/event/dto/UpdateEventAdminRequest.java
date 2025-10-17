@@ -14,7 +14,7 @@ public record UpdateEventAdminRequest(
 
         Long category,
 
-        @Size(min = 20, max = 7000, message = "Описание должно содержать от 20 до 7000 символов")
+        @Size(min = 20, max = 7000, message = "Описание должно содержать от {min} до {max} символов")
         String description,
 
         @Future(message = "Дата события должна быть в будущем")
@@ -32,7 +32,7 @@ public record UpdateEventAdminRequest(
 
         StateActionAdmin stateAction,
 
-        @Size(min = 3, max = 120, message = "Заголовок должен содержать от 3 до 120 символов")
+        @Size(min = 3, max = 120, message = "Заголовок должен содержать от {min} до {max} символов")
         String title
 ) {
 }

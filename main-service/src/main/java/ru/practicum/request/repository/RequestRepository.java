@@ -3,7 +3,7 @@ package ru.practicum.request.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.practicum.event.model.EventWithCountConfirmedRequests;
+import ru.practicum.event.dto.EventWithCountConfirmedRequests;
 import ru.practicum.request.dto.ParticipationRequestDto;
 import ru.practicum.request.model.Request;
 import ru.practicum.request.model.RequestStatus;
@@ -13,7 +13,7 @@ import java.util.List;
 public interface RequestRepository extends JpaRepository<Request, Long> {
 
     @Query("""
-            SELECT NEW ru.practicum.event.model.EventWithCountConfirmedRequests(r.event.id, COUNT(r))
+            SELECT NEW ru.practicum.event.dto.EventWithCountConfirmedRequests(r.event.id, COUNT(r))
             FROM Request r
             WHERE r.event.id IN :eventIds AND r.status = ru.practicum.request.model.RequestStatus.CONFIRMED
             GROUP BY r.event.id"""

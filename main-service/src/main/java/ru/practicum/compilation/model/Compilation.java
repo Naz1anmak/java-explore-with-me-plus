@@ -1,7 +1,6 @@
 package ru.practicum.compilation.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "compilations")
 @Getter
-@Setter(AccessLevel.PROTECTED)
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Compilation {
     @Id

@@ -7,14 +7,14 @@ import java.time.LocalDateTime;
 
 public record NewEventDto(
         @NotBlank(message = "Краткое описание не может быть пустым")
-        @Size(min = 20, max = 2000, message = "Аннотация должна содержать от 20 до 2000 символов")
+        @Size(min = 20, max = 2000, message = "Аннотация должна содержать от {min} до {max} символов")
         String annotation,
 
         @NotNull(message = "Id категории не может быть null")
         Long category,
 
         @NotBlank(message = "Описание события не может быть пустым")
-        @Size(min = 20, max = 7000, message = "Описание должно содержать от 20 до 7000 символов")
+        @Size(min = 20, max = 7000, message = "Описание должно содержать от {min} до {max} символов")
         String description,
 
         @NotNull(message = "Дата события не может быть null")
@@ -33,7 +33,7 @@ public record NewEventDto(
         Boolean requestModeration,
 
         @NotBlank(message = "Название события не может быть пустым")
-        @Size(min = 3, max = 120, message = "Заголовок должен содержать от 3 до 120 символов")
+        @Size(min = 3, max = 120, message = "Заголовок должен содержать от {min} до {max} символов")
         String title
 ) {
     public NewEventDto {
