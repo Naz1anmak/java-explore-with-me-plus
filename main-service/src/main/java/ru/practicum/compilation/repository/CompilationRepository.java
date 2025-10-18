@@ -1,6 +1,5 @@
 package ru.practicum.compilation.repository;
 
-import io.micrometer.common.lang.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,8 +22,6 @@ public interface CompilationRepository extends JpaRepository<Compilation, Long> 
     Optional<Compilation> findByIdWithEvents(@Param("id") Long id);
 
     boolean existsByTitle(String title);
-
-    boolean existsById(@NonNull Long compId);
 
     @Query("""
             SELECT c FROM Compilation c

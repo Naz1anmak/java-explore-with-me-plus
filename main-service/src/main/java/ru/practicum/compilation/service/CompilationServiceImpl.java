@@ -1,6 +1,7 @@
 package ru.practicum.compilation.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +22,9 @@ import ru.practicum.exception.NotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -42,10 +43,14 @@ public class CompilationServiceImpl implements CompilationService {
 
         if (request.events() != null && !request.events().isEmpty()) {
             List<Event> events = eventRepository.findAllByEventIds(new ArrayList<>(request.events()));
+
             if (events.size() != request.events().size()) throw new NotFoundException("Не все события найдены");
             compilation.setEvents(new HashSet<>(events));
         } else compilation.setEvents(new HashSet<>());
         Compilation savedCompilation = compilationRepository.save(compilation);
+
+        log.info("Создан сборник: {}", request);
+
         return compilationMapper.toDto(savedCompilation);
     }
 
@@ -55,14 +60,15 @@ public class CompilationServiceImpl implements CompilationService {
         if (!compilationRepository.existsById(compId))
             throw new NotFoundException("Сборник с идентификатором " + compId + " не найден");
 
+        log.info("Удален сборник compId={}", compId);
+
         compilationRepository.deleteById(compId);
     }
 
     @Override
     @Transactional
     public CompilationDto updateCompilation(Long compId, UpdateCompilationRequest request) {
-        Compilation compilation = compilationRepository.findByIdWithEvents(compId)
-                .orElseThrow(() -> new NotFoundException("Сборник с идентификатором " + compId + " не найден"));
+        Compilation compilation = getCompilationOrThrow(compId);
 
         if (request.title() != null && !request.title().equals(compilation.getTitle()) &&
             compilationRepository.existsByTitle(request.title()))
@@ -70,6 +76,7 @@ public class CompilationServiceImpl implements CompilationService {
 
         if (request.title() != null) compilation.setTitle(request.title());
         compilation.setPinned(request.pinned());
+
         if (request.events() != null) {
             if (request.events().isEmpty()) {
                 compilation.setEvents(new HashSet<>());
@@ -80,6 +87,8 @@ public class CompilationServiceImpl implements CompilationService {
                 compilation.setEvents(new HashSet<>(events));
             }
         }
+
+        log.info("Обновлен сборник request={}", request);
 
         return compilationMapper.toDto(compilationRepository.save(compilation));
     }
@@ -103,23 +112,30 @@ public class CompilationServiceImpl implements CompilationService {
         if (!compilations.isEmpty()) {
             List<Long> compilationIds = compilations.stream()
                     .map(Compilation::getId)
-                    .collect(Collectors.toList());
+                    .toList();
 
-            List<Compilation> compilationsWithEvents = compilationRepository.findAllByIdWithEvents(compilationIds);
-            Map<Long, Compilation> compilationMap = compilationsWithEvents.stream()
-                    .collect(Collectors.toMap(Compilation::getId, c -> c));
+            log.info("Получен список сборников pinned={}, pageable={}", pinned, pageable);
 
             return compilations.stream()
                     .map(compilationMapper::toDto)
                     .collect(Collectors.toList());
         }
+        log.info("Список сборников пуст");
+
         return List.of();
     }
 
     @Override
     public CompilationDto getCompilationById(Long compId) {
-        Compilation compilation = compilationRepository.findByIdWithEvents(compId)
-                .orElseThrow(() -> new NotFoundException("Сборник с идентификатором " + compId + " не найдена"));
+        Compilation compilation = getCompilationOrThrow(compId);
+
+        log.info("Получен сборник compId={}", compId);
+
         return compilationMapper.toDto(compilation);
+    }
+
+    private Compilation getCompilationOrThrow(Long compId) {
+        return compilationRepository.findByIdWithEvents(compId)
+                .orElseThrow(() -> new NotFoundException("Сборник с идентификатором " + compId + " не найден"));
     }
 }

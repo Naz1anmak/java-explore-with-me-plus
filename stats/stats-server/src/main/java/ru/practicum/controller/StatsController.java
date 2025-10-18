@@ -32,10 +32,12 @@ public class StatsController {
                                        @RequestParam(value = "unique", defaultValue = "false") boolean unique) {
         StatsRequest request = StatsRequest.of(start, end, uris, unique);
 
-        if (request.start().isAfter(request.end()))
+        if (request.start().isAfter(request.end())) {
             throw new BadRequestException("Дата начала должна быть раньше даты окончания");
+        }
 
-        log.debug("Controller: getStats request={}", request);
+        log.debug("Controller: getStats1 request={}", request);
+
         return statsService.getStats(request);
     }
 }
