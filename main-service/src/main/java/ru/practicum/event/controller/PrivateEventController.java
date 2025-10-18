@@ -31,10 +31,9 @@ public class PrivateEventController {
     private final RequestService requestService;
 
     @GetMapping
-    public List<EventShortDto> getEvents(
-            @PathVariable("userId") @Positive Long userId,
-            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-            @RequestParam(defaultValue = "10") @Positive Integer size
+    public List<EventShortDto> getEvents(@PathVariable("userId") @Positive Long userId,
+                                         @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                         @RequestParam(defaultValue = "10") @Positive Integer size
     ) {
         Pageable pageable = PageRequest.of(from / size, size);
         log.debug("Controller: getEvents with id={} with pageable {}", userId, pageable);
@@ -43,48 +42,43 @@ public class PrivateEventController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EventFullDto createEvent(
-            @PathVariable("userId") @Positive Long userId,
-            @RequestBody @Valid NewEventDto newEventDto
+    public EventFullDto createEvent(@PathVariable("userId") @Positive Long userId,
+                                    @RequestBody @Valid NewEventDto newEventDto
     ) {
         log.debug("Controller: createEvent with id={} with data {}", userId, newEventDto);
         return eventService.createEvent(userId, newEventDto);
     }
 
     @GetMapping("/{eventId}")
-    public EventFullDto getEvent(
-            @PathVariable("userId") @Positive Long userId,
-            @PathVariable("eventId") @Positive Long eventId,
-            HttpServletRequest request
+    public EventFullDto getEvent(@PathVariable("userId") @Positive Long userId,
+                                 @PathVariable("eventId") @Positive Long eventId,
+                                 HttpServletRequest request
     ) {
         log.debug("Controller: getEvent with id={} and eventId={}", userId, eventId);
         return eventService.getEvent(userId, eventId, request.getRemoteAddr());
     }
 
     @PatchMapping("/{eventId}")
-    public EventFullDto updateEvent(
-            @PathVariable("userId") @Positive Long userId,
-            @PathVariable("eventId") @Positive Long eventId,
-            @RequestBody @Valid UpdateEventUserRequest request
+    public EventFullDto updateEvent(@PathVariable("userId") @Positive Long userId,
+                                    @PathVariable("eventId") @Positive Long eventId,
+                                    @RequestBody @Valid UpdateEventUserRequest request
     ) {
         log.debug("Controller: updateEvent with id={} and eventId={} with data {}", userId, eventId, request);
         return eventService.updateEvent(userId, eventId, request);
     }
 
     @GetMapping("/{eventId}/requests")
-    public List<ParticipationRequestDto> getRequestsByEvent(
-            @PathVariable("userId") @Positive Long userId,
-            @PathVariable("eventId") @Positive Long eventId
+    public List<ParticipationRequestDto> getRequestsByEvent(@PathVariable("userId") @Positive Long userId,
+                                                            @PathVariable("eventId") @Positive Long eventId
     ) {
         log.debug("Controller: getRequestsByEvent with id={} and eventId={}", userId, eventId);
         return requestService.getRequestsByEvent(userId, eventId);
     }
 
     @PatchMapping("/{eventId}/requests")
-    public EventRequestStatusUpdateResult updateRequestStatus(
-            @PathVariable("userId") @Positive Long userId,
-            @PathVariable("eventId") @Positive Long eventId,
-            @RequestBody EventRequestStatusUpdateRequest request
+    public EventRequestStatusUpdateResult updateRequestStatus(@PathVariable("userId") @Positive Long userId,
+                                                              @PathVariable("eventId") @Positive Long eventId,
+                                                              @RequestBody EventRequestStatusUpdateRequest request
     ) {
         log.debug("Controller: updateRequestStatus with id={} and eventId={} with data {}", userId, eventId, request);
         return requestService.updateRequestStatus(userId, eventId, request);

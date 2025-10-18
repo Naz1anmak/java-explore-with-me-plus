@@ -36,8 +36,7 @@ public class StatsController {
             throw new BadRequestException("Дата начала должна быть раньше даты окончания");
         }
 
-        log.debug("Controller: getStats1 request={}", request);
-
+        log.debug("Controller: getStats request={}", request);
         return statsService.getStats(request);
     }
 }

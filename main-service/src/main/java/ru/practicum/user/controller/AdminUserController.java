@@ -30,10 +30,9 @@ public class AdminUserController {
     }
 
     @GetMapping
-    public List<UserDto> getUsers(
-            @RequestParam(required = false) List<Long> ids,
-            @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-            @RequestParam(defaultValue = "10") @Positive int size
+    public List<UserDto> getUsers(@RequestParam(required = false) List<Long> ids,
+                                  @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                  @RequestParam(defaultValue = "10") @Positive int size
     ) {
         Pageable pageable = PageRequest.of(from / size, size);
         log.debug("Controller: getUsers ids={}", ids);

@@ -22,7 +22,6 @@ import ru.practicum.exception.NotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -46,11 +45,11 @@ public class CompilationServiceImpl implements CompilationService {
 
             if (events.size() != request.events().size()) throw new NotFoundException("Не все события найдены");
             compilation.setEvents(new HashSet<>(events));
+
         } else compilation.setEvents(new HashSet<>());
         Compilation savedCompilation = compilationRepository.save(compilation);
 
         log.info("Создан сборник: {}", request);
-
         return compilationMapper.toDto(savedCompilation);
     }
 
@@ -61,7 +60,6 @@ public class CompilationServiceImpl implements CompilationService {
             throw new NotFoundException("Сборник с идентификатором " + compId + " не найден");
 
         log.info("Удален сборник compId={}", compId);
-
         compilationRepository.deleteById(compId);
     }
 
@@ -70,8 +68,8 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto updateCompilation(Long compId, UpdateCompilationRequest request) {
         Compilation compilation = getCompilationOrThrow(compId);
 
-        if (request.title() != null && !request.title().equals(compilation.getTitle()) &&
-            compilationRepository.existsByTitle(request.title()))
+        if (request.title() != null && !request.title().equals(compilation.getTitle())
+                && compilationRepository.existsByTitle(request.title()))
             throw new ConflictException("Сборник с таким названием (" + request.title() + ") уже существует");
 
         if (request.title() != null) compilation.setTitle(request.title());
@@ -89,7 +87,6 @@ public class CompilationServiceImpl implements CompilationService {
         }
 
         log.info("Обновлен сборник request={}", request);
-
         return compilationMapper.toDto(compilationRepository.save(compilation));
     }
 
@@ -110,18 +107,12 @@ public class CompilationServiceImpl implements CompilationService {
         List<Compilation> compilations = compilationsPage.getContent();
 
         if (!compilations.isEmpty()) {
-            List<Long> compilationIds = compilations.stream()
-                    .map(Compilation::getId)
-                    .toList();
-
             log.info("Получен список сборников pinned={}, pageable={}", pinned, pageable);
-
             return compilations.stream()
                     .map(compilationMapper::toDto)
-                    .collect(Collectors.toList());
+                    .toList();
         }
         log.info("Список сборников пуст");
-
         return List.of();
     }
 
@@ -130,7 +121,6 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = getCompilationOrThrow(compId);
 
         log.info("Получен сборник compId={}", compId);
-
         return compilationMapper.toDto(compilation);
     }
 

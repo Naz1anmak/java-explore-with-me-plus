@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.compilation.model.Compilation;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface CompilationRepository extends JpaRepository<Compilation, Long> {
@@ -22,12 +21,4 @@ public interface CompilationRepository extends JpaRepository<Compilation, Long> 
     Optional<Compilation> findByIdWithEvents(@Param("id") Long id);
 
     boolean existsByTitle(String title);
-
-    @Query("""
-            SELECT c FROM Compilation c
-            LEFT JOIN FETCH c.events e
-            LEFT JOIN FETCH e.category
-            LEFT JOIN FETCH e.initiator
-            WHERE c.id IN :ids""")
-    List<Compilation> findAllByIdWithEvents(@Param("ids") List<Long> ids);
 }

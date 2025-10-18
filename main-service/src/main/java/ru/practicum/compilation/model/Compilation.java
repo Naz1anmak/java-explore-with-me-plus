@@ -23,7 +23,7 @@ public class Compilation {
     private String title;
 
     @Column(nullable = false)
-    private boolean pinned = false;
+    private boolean pinned;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
