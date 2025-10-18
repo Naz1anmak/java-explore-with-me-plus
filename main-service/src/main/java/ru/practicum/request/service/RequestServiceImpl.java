@@ -22,7 +22,6 @@ import ru.practicum.user.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -99,7 +98,7 @@ public class RequestServiceImpl implements RequestService {
         log.info("Получение информации о запросах на участие в событии с id={}", eventId);
         return requestRepository.findAllParticipationRequestByEventId(eventId).stream()
                 .map(requestMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

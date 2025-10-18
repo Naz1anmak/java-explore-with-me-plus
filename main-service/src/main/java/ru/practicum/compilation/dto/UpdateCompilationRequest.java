@@ -7,7 +7,7 @@ import java.util.Set;
 public record UpdateCompilationRequest(
         Set<Long> events,
 
-        boolean pinned,
+        Boolean pinned,
 
         @Size(min = 1, max = 50, message = "Заголовок должен содержать от {min} до {max} символов")
         String title

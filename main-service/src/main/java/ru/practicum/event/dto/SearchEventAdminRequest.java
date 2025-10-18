@@ -1,6 +1,7 @@
 package ru.practicum.event.dto;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import ru.practicum.event.model.EventState;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public record SearchEventAdminRequest(
         List<Long> users,
 
-        List<String> states,
+        List<EventState> states,
 
         List<Long> categories,
 

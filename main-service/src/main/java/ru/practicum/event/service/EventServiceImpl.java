@@ -16,7 +16,10 @@ import ru.practicum.category.model.Category;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.mapper.EventMapper;
-import ru.practicum.event.model.*;
+import ru.practicum.event.model.Event;
+import ru.practicum.event.model.EventState;
+import ru.practicum.event.model.StateActionAdmin;
+import ru.practicum.event.model.StateActionUser;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.event.repository.SearchEventSpecifications;
 import ru.practicum.exception.BadRequestException;
@@ -72,7 +75,7 @@ public class EventServiceImpl implements EventService {
 
         List<Long> eventIds = eventsPage.stream()
                 .map(Event::getId)
-                .collect(Collectors.toList());
+                .toList();
 
         Map<Long, Integer> confirmedRequests = getConfirmedRequests(eventIds);
         Map<Long, Long> views = getViewsForEvents(eventIds);
@@ -83,7 +86,7 @@ public class EventServiceImpl implements EventService {
                         confirmedRequests.getOrDefault(event.getId(), 0),
                         views.getOrDefault(event.getId(), 0L)
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -175,7 +178,7 @@ public class EventServiceImpl implements EventService {
                         confirmedRequests.getOrDefault(event.getId(), 0),
                         views.getOrDefault(event.getId(), 0L)
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -240,7 +243,7 @@ public class EventServiceImpl implements EventService {
 
         List<Long> eventIds = events.stream()
                 .map(Event::getId)
-                .collect(Collectors.toList());
+                .toList();
 
         Map<Long, Integer> confirmedRequests = getConfirmedRequests(eventIds);
         Map<Long, Long> views = getViewsForEvents(eventIds);
@@ -251,15 +254,20 @@ public class EventServiceImpl implements EventService {
                         confirmedRequests.getOrDefault(event.getId(), 0),
                         views.getOrDefault(event.getId(), 0L)
                 ))
-                .collect(Collectors.toList());
+                .toList();
 
         saveHit("/events", ip);
 
         if ("VIEWS".equals(request.sort())) {
             return result.stream()
                     .sorted(Comparator.comparing(EventShortDto::views).reversed())
-                    .collect(Collectors.toList());
+                    .toList();
+        } else if ("EVENT_DATE".equals(request.sort())) {
+            return result.stream()
+                    .sorted(Comparator.comparing(EventShortDto::eventDate))
+                    .toList();
         }
+
         return result;
     }
 
@@ -317,7 +325,7 @@ public class EventServiceImpl implements EventService {
 
         List<String> uris = eventIds.stream()
                 .map(id -> "/events/" + id)
-                .collect(Collectors.toList());
+                .toList();
 
         LocalDateTime start = eventRepository.findFirstByOrderByCreatedOnAsc().getCreatedOn();
         LocalDateTime end = LocalDateTime.now();

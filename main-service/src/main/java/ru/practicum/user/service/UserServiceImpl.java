@@ -17,7 +17,6 @@ import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
                 : userRepository.findByIdIn(ids, sortedPageable);
         return users.stream()
                 .map(userMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

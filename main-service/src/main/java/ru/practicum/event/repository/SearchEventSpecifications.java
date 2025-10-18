@@ -1,7 +1,12 @@
 package ru.practicum.event.repository;
 
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.jpa.domain.Specification;
 import ru.practicum.event.model.Event;
+import ru.practicum.event.model.EventState;
+import ru.practicum.request.model.Request;
+import ru.practicum.request.model.RequestStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +24,7 @@ public class SearchEventSpecifications {
         };
     }
 
-    public static Specification<Event> addWhereStates(List<String> states) {
+    public static Specification<Event> addWhereStates(List<EventState> states) {
         return (root, query, criteriaBuilder) -> {
             if (states == null || states.isEmpty()) return criteriaBuilder.conjunction();
             return root.get("state").in(states);
@@ -66,13 +71,23 @@ public class SearchEventSpecifications {
     }
 
     public static Specification<Event> addWhereAvailableSlots() {
-        return (root, query, criteriaBuilder) ->
-                criteriaBuilder.or(
-                        criteriaBuilder.equal(root.get("participantLimit"), 0),
-                        criteriaBuilder.greaterThan(
-                                root.get("participantLimit"),
-                                root.get("confirmedRequests")
-                        )
-                );
+        return (root, query, criteriaBuilder) -> {
+            assert query != null;
+            Subquery<Long> subquery = query.subquery(Long.class);
+            Root<Request> requestRoot = subquery.from(Request.class);
+
+            subquery.select(criteriaBuilder.count(requestRoot));
+            subquery.where(
+                    criteriaBuilder.and(
+                            criteriaBuilder.equal(requestRoot.get("event"), root),
+                            criteriaBuilder.equal(requestRoot.get("status"), RequestStatus.CONFIRMED)
+                    )
+            );
+
+            return criteriaBuilder.or(
+                    criteriaBuilder.equal(root.get("participantLimit"), 0),
+                    criteriaBuilder.lessThan(subquery, root.get("participantLimit"))
+            );
+        };
     }
 }
