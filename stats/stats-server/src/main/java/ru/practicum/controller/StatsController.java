@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.CreateEndpointHitDto;
 import ru.practicum.StatsRequest;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.exception.BadRequestException;
 import ru.practicum.service.StatsService;
 
 import java.util.List;
@@ -20,18 +21,22 @@ public class StatsController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createHit(@Valid @RequestBody CreateEndpointHitDto createEndpointHitDto) {
-        log.info("Controller: createHit requestBody={}", createEndpointHitDto);
+    public void createHit(@RequestBody @Valid CreateEndpointHitDto createEndpointHitDto) {
+        log.debug("Controller: createHit requestBody={}", createEndpointHitDto);
         statsService.createHit(createEndpointHitDto);
     }
 
     @GetMapping("/stats")
     public List<ViewStatsDto> getStats(@RequestParam("start") String start, @RequestParam("end") String end,
-                                 @RequestParam(value = "uris", required = false) List<String> uris,
-                                 @RequestParam(value = "unique", defaultValue = "false") boolean unique) {
-        log.debug("start={}, end={}, uris={}, unique={}", start, end, uris, unique);
+                                       @RequestParam(value = "uris", required = false) List<String> uris,
+                                       @RequestParam(value = "unique", defaultValue = "false") boolean unique) {
         StatsRequest request = StatsRequest.of(start, end, uris, unique);
-        log.info("Controller: getStats request={}", request);
+
+        if (request.start().isAfter(request.end())) {
+            throw new BadRequestException("Дата начала должна быть раньше даты окончания");
+        }
+
+        log.debug("Controller: getStats request={}", request);
         return statsService.getStats(request);
     }
 }
