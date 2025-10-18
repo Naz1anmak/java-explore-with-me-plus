@@ -18,6 +18,11 @@ public interface EventMapper {
 
     EventShortDto toEventShortDto(Event event, Integer confirmedRequests, Long views);
 
+    @Named("toEventShortWithoutStats")
+    @Mapping(target = "confirmedRequests", ignore = true)
+    @Mapping(target = "views", ignore = true)
+    EventShortDto toEventShortWithoutStats(Event event);
+
     EventFullDto toEventFullDto(Event event, Integer confirmedRequests, Long views);
 
     @Mapping(target = "id", ignore = true)
