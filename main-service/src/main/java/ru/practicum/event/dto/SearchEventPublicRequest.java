@@ -1,9 +1,12 @@
 package ru.practicum.event.dto;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import ru.practicum.event.model.SortState;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static ru.practicum.constants.DateTimeConstants.DATE_TIME_PATTERN;
 
 public record SearchEventPublicRequest(
         String text,
@@ -12,15 +15,15 @@ public record SearchEventPublicRequest(
 
         Boolean paid,
 
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(pattern = DATE_TIME_PATTERN)
         LocalDateTime rangeStart,
 
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(pattern = DATE_TIME_PATTERN)
         LocalDateTime rangeEnd,
 
         Boolean onlyAvailable,
 
-        String sort,
+        SortState sort,
 
         Integer from,
 
@@ -31,7 +34,7 @@ public record SearchEventPublicRequest(
             onlyAvailable = false;
         }
         if (sort == null) {
-            sort = "EVENT_DATE";
+            sort = SortState.EVENT_DATE;
         }
         if (from == null) {
             from = 0;

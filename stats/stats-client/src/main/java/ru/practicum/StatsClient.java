@@ -14,11 +14,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static ru.practicum.constants.DateTimeConstants.DATE_TIME_PATTERN;
+
 @Slf4j
 @Component
 public class StatsClient {
     private final RestClient restClient;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
 
     public StatsClient(@Value("${stats-server.url:http://localhost:9090}") String serverUrl) {
         this.restClient = RestClient.builder()

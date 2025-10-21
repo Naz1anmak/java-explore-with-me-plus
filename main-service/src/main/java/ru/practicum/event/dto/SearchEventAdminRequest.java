@@ -6,6 +6,8 @@ import ru.practicum.event.model.EventState;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.practicum.constants.DateTimeConstants.DATE_TIME_PATTERN;
+
 public record SearchEventAdminRequest(
         List<Long> users,
 
@@ -13,10 +15,10 @@ public record SearchEventAdminRequest(
 
         List<Long> categories,
 
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(pattern = DATE_TIME_PATTERN)
         LocalDateTime rangeStart,
 
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(pattern = DATE_TIME_PATTERN)
         LocalDateTime rangeEnd,
 
         Integer from,

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.constants.DateTimeConstants.DATE_TIME_PATTERN;
+
 public record NewEventDto(
         @NotBlank(message = "Краткое описание не может быть пустым")
         @Size(min = 20, max = 2000, message = "Аннотация должна содержать от {min} до {max} символов")
@@ -19,7 +21,7 @@ public record NewEventDto(
 
         @NotNull(message = "Дата события не может быть null")
         @Future(message = "Дата события должна быть в будущем")
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
         LocalDateTime eventDate,
 
         @NotNull(message = "Место проведения события не может быть null")

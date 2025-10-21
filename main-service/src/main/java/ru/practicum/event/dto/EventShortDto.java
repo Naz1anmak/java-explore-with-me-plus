@@ -6,6 +6,8 @@ import ru.practicum.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.constants.DateTimeConstants.DATE_TIME_PATTERN;
+
 public record EventShortDto(
         Long id,
 
@@ -15,7 +17,7 @@ public record EventShortDto(
 
         Long confirmedRequests,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
         LocalDateTime eventDate,
 
         UserShortDto initiator,

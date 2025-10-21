@@ -5,10 +5,12 @@ import ru.practicum.request.model.RequestStatus;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.constants.DateTimeConstants.DATE_TIME_PATTERN;
+
 public record ParticipationRequestDto(
         Long id,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
         LocalDateTime created,
 
         Long event,

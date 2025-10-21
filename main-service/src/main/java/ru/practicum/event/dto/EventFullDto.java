@@ -7,6 +7,8 @@ import ru.practicum.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.constants.DateTimeConstants.DATE_TIME_PATTERN;
+
 public record EventFullDto(
         Long id,
 
@@ -16,12 +18,12 @@ public record EventFullDto(
 
         Long confirmedRequests,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
         LocalDateTime createdOn,
 
         String description,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
         LocalDateTime eventDate,
 
         UserShortDto initiator,
@@ -32,7 +34,7 @@ public record EventFullDto(
 
         Integer participantLimit,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
         LocalDateTime publishedOn,
 
         Boolean requestModeration,

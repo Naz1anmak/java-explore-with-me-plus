@@ -8,6 +8,8 @@ import ru.practicum.event.model.StateActionUser;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.constants.DateTimeConstants.DATE_TIME_PATTERN;
+
 public record UpdateEventUserRequest(
         @Size(min = 20, max = 2000, message = "Недопустимое количество символов")
         String annotation,
@@ -18,7 +20,7 @@ public record UpdateEventUserRequest(
         String description,
 
         @Future(message = "Дата события должна быть в будущем")
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
         LocalDateTime eventDate,
 
         LocationDto location,
