@@ -25,7 +25,7 @@ public class AdminUserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@RequestBody @Valid NewUserRequest userRequest) {
-        log.debug("Controller: createUser {}", userRequest);
+        log.debug("Controller: createUser data={}", userRequest);
         return userService.createUser(userRequest);
     }
 
@@ -42,7 +42,7 @@ public class AdminUserController {
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable @Positive Long userId) {
-        log.debug("Controller: deleteUser id={}", userId);
+        log.debug("Controller: deleteUser userId={}", userId);
         userService.deleteUser(userId);
     }
 }

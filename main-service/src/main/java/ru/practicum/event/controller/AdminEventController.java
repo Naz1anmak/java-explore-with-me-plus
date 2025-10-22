@@ -25,7 +25,7 @@ public class AdminEventController {
         int size = (request.size() != null && request.size() > 0) ? request.size() : 10;
         int from = request.from() != null ? request.from() : 0;
         PageRequest pageRequest = PageRequest.of(from / size, size);
-        log.debug("Controller: getEventAdmin filters {}", request);
+        log.debug("Controller: getEventAdmin filters={}", request);
         return eventService.getEventsAdmin(request, pageRequest);
     }
 
@@ -33,7 +33,7 @@ public class AdminEventController {
     public EventFullDto updateEventAdmin(@PathVariable @Positive Long eventId,
                                          @RequestBody @Valid UpdateEventAdminRequest request
     ) {
-        log.debug("Controller: updateEventAdmin id={}, data {}", eventId, request);
+        log.debug("Controller: updateEventAdmin eventId={}, data={}", eventId, request);
         return eventService.updateEventAdmin(eventId, request);
     }
 }

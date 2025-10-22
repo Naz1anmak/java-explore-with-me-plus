@@ -25,13 +25,13 @@ public class PublicCategoryController {
             @RequestParam(defaultValue = "10") @Positive Integer size) {
         int page = from / size;
         Pageable pageable = PageRequest.of(page, size);
-        log.debug("Controller: getCategories with from={}, size={}", from, size);
+        log.debug("Controller: getCategories from={}, size={}", from, size);
         return categoryService.getCategories(pageable);
     }
 
     @GetMapping("/{categoryId}")
     public CategoryDto getCategoryById(@PathVariable @Positive Long categoryId) {
-        log.debug("Controller: getCategoryById with id={}", categoryId);
+        log.debug("Controller: getCategoryById categoryId={}", categoryId);
         return categoryService.getCategoryById(categoryId);
     }
 }

@@ -28,13 +28,13 @@ public class PublicEventController {
         int size = (request.size() != null && request.size() > 0) ? request.size() : 10;
         int from = request.from() != null ? request.from() : 0;
         PageRequest pageRequest = PageRequest.of(from / size, size);
-        log.debug("Controller: getEventsPublic with filters {}", request);
+        log.debug("Controller: getEventsPublic filters={}", request);
         return eventService.getEventsPublic(request, pageRequest, httpRequest.getRemoteAddr());
     }
 
     @GetMapping("/{id}")
-    public EventFullDto getEventByIdPublic(@PathVariable @Positive Long id, HttpServletRequest request) {
-        log.debug("Controller: getEventByIdPublic with id={}", id);
-        return eventService.getEventByIdPublic(id, request.getRemoteAddr());
+    public EventFullDto getEventByIdPublic(@PathVariable("id") @Positive Long eventId, HttpServletRequest request) {
+        log.debug("Controller: getEventByIdPublic eventId={}", eventId);
+        return eventService.getEventByIdPublic(eventId, request.getRemoteAddr());
     }
 }
