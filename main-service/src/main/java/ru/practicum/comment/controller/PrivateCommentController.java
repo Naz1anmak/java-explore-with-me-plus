@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.comment.dto.NewCommentDto;
@@ -16,6 +17,7 @@ import ru.practicum.comment.service.CommentService;
 import java.util.List;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/users/{userId}/comments")
 @RequiredArgsConstructor
@@ -36,7 +38,7 @@ public class PrivateCommentController {
     public CommentDto updateComment(@PathVariable @Positive Long userId,
                                     @PathVariable @Positive Long eventId,
                                     @PathVariable @Positive Long commentId,
-                                    @Valid @RequestBody UpdateCommentDto updateCommentDto
+                                    @RequestBody @Valid UpdateCommentDto updateCommentDto
     ) {
         log.debug("Controller: updateComment userId={}, eventId={}, commentId={}, data={}", userId, eventId, commentId,
                 updateCommentDto);

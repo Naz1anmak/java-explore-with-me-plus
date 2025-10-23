@@ -1,15 +1,16 @@
 package ru.practicum.comment.repository;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.comment.model.Comment;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+
     @Query("""
             SELECT c FROM Comment c
             LEFT JOIN FETCH c.user
@@ -33,7 +34,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             WHERE c.event.id = :eventId
             ORDER BY c.createdDate DESC"""
     )
-    Page<Comment> findByEventId(@Param("eventId") Long eventId, Pageable pageable);
+    List<Comment> findByEventId(@Param("eventId") Long eventId, Pageable pageable);
 
     @Query("""
             SELECT c FROM Comment c
@@ -42,5 +43,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             WHERE c.user.id = :userId
             ORDER BY c.createdDate DESC"""
     )
-    Page<Comment> findByUserId(@Param("userId") Long userId, Pageable pageable);
+    List<Comment> findByUserId(@Param("userId") Long userId, Pageable pageable);
 }

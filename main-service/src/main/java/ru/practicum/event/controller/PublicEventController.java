@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
@@ -15,6 +16,7 @@ import ru.practicum.event.service.EventService;
 import java.util.List;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
@@ -33,8 +35,9 @@ public class PublicEventController {
     }
 
     @GetMapping("/{id}")
-    public EventFullDto getEventByIdPublic(@PathVariable("id") @Positive Long eventId, HttpServletRequest request) {
+    public EventFullDto getEventByIdPublic(@PathVariable("id") @Positive Long eventId,
+                                           HttpServletRequest httpRequest) {
         log.debug("Controller: getEventByIdPublic eventId={}", eventId);
-        return eventService.getEventByIdPublic(eventId, request.getRemoteAddr());
+        return eventService.getEventByIdPublic(eventId, httpRequest.getRemoteAddr());
     }
 }

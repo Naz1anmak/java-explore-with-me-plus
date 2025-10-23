@@ -66,17 +66,17 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> getEvents(Long userId, Pageable pageable) {
         userService.getUserById(userId);
-        Page<Event> eventsPage = eventRepository.findAllByInitiatorIdOrderByCreatedOnDesc(userId, pageable);
+        List<Event> events = eventRepository.findAllByInitiatorIdOrderByCreatedOnDesc(userId, pageable);
 
-        if (eventsPage.isEmpty()) return List.of();
+        if (events.isEmpty()) return List.of();
 
-        List<Long> eventIds = eventsPage.stream()
+        List<Long> eventIds = events.stream()
                 .map(Event::getId)
                 .toList();
 
         EventStatistics stats = getEventStatistics(eventIds);
 
-        return eventsPage.stream()
+        return events.stream()
                 .map(event -> eventMapper.toEventShortDto(
                         event,
                         stats.confirmedRequests().getOrDefault(event.getId(), 0),
