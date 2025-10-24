@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
@@ -15,6 +16,7 @@ import ru.practicum.event.service.EventService;
 import java.util.List;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
@@ -28,13 +30,14 @@ public class PublicEventController {
         int size = (request.size() != null && request.size() > 0) ? request.size() : 10;
         int from = request.from() != null ? request.from() : 0;
         PageRequest pageRequest = PageRequest.of(from / size, size);
-        log.debug("Controller: getEventsPublic with filters {}", request);
+        log.debug("Controller: getEventsPublic filters={}", request);
         return eventService.getEventsPublic(request, pageRequest, httpRequest.getRemoteAddr());
     }
 
     @GetMapping("/{id}")
-    public EventFullDto getEventByIdPublic(@PathVariable @Positive Long id, HttpServletRequest request) {
-        log.debug("Controller: getEventByIdPublic with id={}", id);
-        return eventService.getEventByIdPublic(id, request.getRemoteAddr());
+    public EventFullDto getEventByIdPublic(@PathVariable("id") @Positive Long eventId,
+                                           HttpServletRequest httpRequest) {
+        log.debug("Controller: getEventByIdPublic eventId={}", eventId);
+        return eventService.getEventByIdPublic(eventId, httpRequest.getRemoteAddr());
     }
 }

@@ -2,7 +2,6 @@ package ru.practicum.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -48,8 +47,8 @@ public class UserServiceImpl implements UserService {
                 pageable.getPageSize(),
                 Sort.by(ASC, "id")
         );
-        Page<User> users = (ids == null || ids.isEmpty())
-                ? userRepository.findAll(sortedPageable)
+        List<User> users = (ids == null || ids.isEmpty())
+                ? userRepository.findAllList(sortedPageable)
                 : userRepository.findByIdIn(ids, sortedPageable);
         return users.stream()
                 .map(userMapper::toDto)

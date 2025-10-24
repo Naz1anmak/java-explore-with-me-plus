@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.user.dto.NewUserRequest;
 import ru.practicum.user.dto.UserDto;
@@ -16,6 +17,7 @@ import ru.practicum.user.service.UserService;
 import java.util.List;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/admin/users")
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class AdminUserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@RequestBody @Valid NewUserRequest userRequest) {
-        log.debug("Controller: createUser {}", userRequest);
+        log.debug("Controller: createUser data={}", userRequest);
         return userService.createUser(userRequest);
     }
 
@@ -42,7 +44,7 @@ public class AdminUserController {
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable @Positive Long userId) {
-        log.debug("Controller: deleteUser id={}", userId);
+        log.debug("Controller: deleteUser userId={}", userId);
         userService.deleteUser(userId);
     }
 }

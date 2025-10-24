@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.compilation.dto.CompilationDto;
 import ru.practicum.compilation.dto.NewCompilationDto;
@@ -12,6 +13,7 @@ import ru.practicum.compilation.dto.UpdateCompilationRequest;
 import ru.practicum.compilation.service.CompilationService;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/admin/compilations")
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class AdminCompilationController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDto createCompilation(@RequestBody @Valid NewCompilationDto request) {
-        log.debug("Controller: createCompilation data {}", request);
+        log.debug("Controller: createCompilation data={}", request);
         return compilationService.createCompilation(request);
     }
 
@@ -35,7 +37,7 @@ public class AdminCompilationController {
     @PatchMapping("/{compId}")
     public CompilationDto updateCompilation(@PathVariable @Positive Long compId,
                                             @RequestBody @Valid UpdateCompilationRequest request) {
-        log.debug("Controller: updateCompilation compId={}, data {}", compId, request);
+        log.debug("Controller: updateCompilation compId={}, data={}", compId, request);
         return compilationService.updateCompilation(compId, request);
     }
 }

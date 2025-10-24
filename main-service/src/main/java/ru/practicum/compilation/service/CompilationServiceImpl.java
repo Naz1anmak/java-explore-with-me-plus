@@ -2,7 +2,6 @@ package ru.practicum.compilation.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,9 +18,9 @@ import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -100,22 +99,27 @@ public class CompilationServiceImpl implements CompilationService {
                 Sort.by("id").ascending()
         );
 
-        Page<Compilation> compilationsPage;
-        if (pinned != null)
-            compilationsPage = compilationRepository.findByPinned(pinned, sortedPageable);
-        else
-            compilationsPage = compilationRepository.findAll(sortedPageable);
+        List<Long> ids = compilationRepository.findIdsByPinned(pinned, sortedPageable);
 
-        List<Compilation> compilations = compilationsPage.getContent();
-
-        if (!compilations.isEmpty()) {
-            log.info("Получен список подборок pinned={}, pageable={}", pinned, pageable);
-            return compilations.stream()
-                    .map(compilationMapper::toDto)
-                    .toList();
+        if (ids == null || ids.isEmpty()) {
+            log.info("Список подборок пуст pinned={}, pageable={}", pinned, pageable);
+            return List.of();
         }
-        log.info("Список подборок пуст");
-        return List.of();
+
+        List<Compilation> compilationsWithEvents = compilationRepository.findAllByIdInWithEvents(ids);
+
+        Map<Long, Compilation> byId = compilationsWithEvents.stream()
+                .collect(Collectors.toMap(Compilation::getId, Function.identity()));
+
+        List<Compilation> ordered = ids.stream()
+                .map(byId::get)
+                .filter(Objects::nonNull)
+                .toList();
+
+        log.info("Получен список подборок pinned={}, pageable={}", pinned, pageable);
+        return ordered.stream()
+                .map(compilationMapper::toDto)
+                .toList();
     }
 
     @Override

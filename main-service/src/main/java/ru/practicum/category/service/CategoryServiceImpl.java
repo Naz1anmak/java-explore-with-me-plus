@@ -2,7 +2,6 @@ package ru.practicum.category.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> getCategories(Pageable pageable) {
-        Page<Category> categoriesPage = categoryRepository.findAll(pageable);
+        List<Category> categoriesPage = categoryRepository.findAllList(pageable);
 
         if (categoriesPage.isEmpty()) {
             return List.of();
